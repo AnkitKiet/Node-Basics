@@ -1,0 +1,48 @@
+/**
+ * Created by Ankit on 19/02/17.
+ */
+var MongoClient = require('mongodb').MongoClient;
+
+// Connect to the db
+MongoClient.connect("mongodb://localhost:27017/demo", function (err, db) {
+
+    //insert data
+    db.collection('Persons', function (err, collection) {
+
+        collection.insert({ id: 1, firstName: 'Steve', lastName: 'Jobs' });
+        collection.insert({ id: 2, firstName: 'Bill', lastName: 'Gates' });
+        collection.insert({ id: 3, firstName: 'James', lastName: 'Bond' });
+    });
+
+    //count total rows
+        db.collection('Persons').count(function (err, count) {
+            if (err) throw err;
+
+            console.log('Total Rows: ' + count);
+        });
+
+        //remove using query
+   collection.remove({ id: { $gt: 1 } }, {w:1}, function(err, result) {
+
+            if(err) throw err;
+
+            console.log('Document Removed Successfully');
+        });
+
+   //remove one element using id
+    collection.remove({id:2}, {w:1}, function(err, result) {
+
+        if(err) throw err;
+
+        console.log('One item Removed Successfully');
+    });
+   //total elements
+       db.collection('Persons', function (err, collection) {
+
+            collection.find().toArray(function (err, items) {
+                if (err) throw err;
+                console.log(items);
+            });
+
+        });
+});
